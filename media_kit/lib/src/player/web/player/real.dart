@@ -56,6 +56,7 @@ class WebPlayer extends PlatformPlayer {
         ..style.height = '100%'
         ..style.border = 'none'
         /* ..setAttribute('autoplay', 'false') */
+        ..setAttribute('crossorigin', 'anonymous')
         ..setAttribute('playsinline', 'true')
         ..pause();
       // Initialize or increment the instance count.
