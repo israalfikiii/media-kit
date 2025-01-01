@@ -335,6 +335,7 @@ class MaterialDesktopVideoControlsThemeData {
 class MaterialDesktopVideoControlsTheme extends InheritedWidget {
   final MaterialDesktopVideoControlsThemeData normal;
   final MaterialDesktopVideoControlsThemeData fullscreen;
+
   const MaterialDesktopVideoControlsTheme({
     super.key,
     required this.normal,
@@ -950,6 +951,7 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onPointerMove(PointerMoveEvent e, BoxConstraints constraints) {
+    print('onPointerMove seekbar');
     final percent = e.localPosition.dx / constraints.maxWidth;
     setState(() {
       hover = true;
@@ -984,6 +986,7 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onEnter(PointerEnterEvent e, BoxConstraints constraints) {
+    print('onEnter seekbar');
     final percent = e.localPosition.dx / constraints.maxWidth;
     setState(() {
       hover = true;
@@ -1020,6 +1023,8 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
 
   @override
   Widget build(BuildContext context) {
+    final bool buffering = controller(context).player.state.buffering;
+
     return Container(
       clipBehavior: Clip.none,
       margin: _theme(context).seekBarMargin,
@@ -1094,6 +1099,33 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
                       ),
                     ),
                   ),
+                  Positioned(
+                      top: 0,
+                      bottom: _theme(context).seekBarContainerHeight * 0.65,
+                      left: ((constraints.maxWidth -
+                                  _theme(context).seekBarThumbSize / 2) *
+                              slider) -
+                          20,
+                      child: hover && !buffering
+                          ? AnimatedContainer(
+                              duration: _theme(context)
+                                  .seekBarThumbTransitionDuration,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Center(
+                                child: Text(
+                                  (duration * slider).label(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    height: 1.0,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink())
                 ],
               ),
             ),
@@ -1526,6 +1558,7 @@ class MaterialDesktopVolumeButtonState
 class MaterialDesktopPositionIndicator extends StatefulWidget {
   /// Overriden [TextStyle] for the [MaterialDesktopPositionIndicator].
   final TextStyle? style;
+
   const MaterialDesktopPositionIndicator({super.key, this.style});
 
   @override
